@@ -13,6 +13,7 @@ require( './middleware/cors' )( app );
 app.use( '/api', router );
 
 require( './route/usuario.route' )( router );
+require( './route/404' )( router );
 
 mongoose.connect( 'mongodb://alan:alan@ds035004.mongolab.com:35004/concrete-solutions' );
 
