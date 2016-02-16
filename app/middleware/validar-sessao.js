@@ -2,14 +2,17 @@ const UsuarioModel = require( './../model/usuario.model' );
 const jwt = require( 'jwt-simple' );
 const segredo = require( './../config/segredo' );
 
-function validarSessao( request, response, next ) {
+/**
+ * Valida o token enviado pelo client.
+ * Se o token for válido, a requisição deverá ser tratada, em caso contrário,
+ * deverá ser rejeitada.
+ * @access private
+ * @param {object}      request     Requisição enviada pelo client
+ * @param {object}      resposta    Resposta da requisição
+ * @param {function}    next        Função que dará continuidade ao fluxo de execução
+ */
+function validarToken( request, response, next ) {
     const token = request.headers.bearer;
-
-    if ( !token ) {
-        return response
-            .status( 401 )
-            .json( { mensagem: 'Não autorizado' } );
-    }
 
     try {
         const tokenDecodificado = jwt.decode( token, segredo );
@@ -42,6 +45,25 @@ function validarSessao( request, response, next ) {
             .status( 401 )
             .json( { mensagem: 'Não autorizado' } );
     }
+}
+
+/**
+ * Autentica a sessão.
+ * @access public
+ * @param {object}      request     Requisição enviada pelo client
+ * @param {object}      resposta    Resposta da requisição
+ * @param {function}    next        Função que dará continuidade ao fluxo de execução
+ */
+function validarSessao( request, response, next ) {
+    const token = request.headers.bearer;
+
+    if ( !token ) {
+        return response
+            .status( 401 )
+            .json( { mensagem: 'Não autorizado' } );
+    }
+
+    validarToken( request, response, next );
 }
 
 module.exports = validarSessao;

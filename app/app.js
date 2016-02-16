@@ -1,21 +1,29 @@
+// :: DEPENDÊNCIAS
 const express = require( 'express' );
 const mongoose = require( 'mongoose' );
 
 const app = express();
 
-const port = process.env.PORT || 8080;
-
-const router = express.Router();
-
+// :: MIDDLEWARE
 require( './middleware/body-parser' )( app );
 require( './middleware/cors' )( app );
 
-app.use( '/api', router );
+// :: ROTAS
+const router = express.Router();
 
+app.use( '/api', router );
 require( './route/usuario.route' )( router );
 require( './route/404' )( router );
 
-mongoose.connect( 'mongodb://alan:alan@ds035004.mongolab.com:35004/concrete-solutions' );
+// :: BANCO DE DADOS
+const database = process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'QA' ?
+    'mongodb://alan:alan@ds035004.mongolab.com:35004/concrete-solutions' :
+    'mongodb://localhost/concrete-solutions';
+
+mongoose.connect( database );
+
+// :: APP SERVER
+const port = process.env.PORT || 8080;
 
 app.listen( port, () => {
     if ( process.env.NODE_ENV !== 'QA' ) {

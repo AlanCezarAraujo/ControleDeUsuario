@@ -1,5 +1,6 @@
 {
     "preset": "jquery",
+    "maximumLineLength": 150,
     "validateQuoteMarks": {
         "mark": "'",
         "escape": true
